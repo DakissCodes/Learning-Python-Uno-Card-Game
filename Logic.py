@@ -188,10 +188,6 @@ while True:
     
             
         ''' 
-        Next Feature:"
-        Function that checks the deck, and prints out only the compatible cards. 
-        if len(deck) == 0:
-            then automatically draws one card!
         TASK 1 : Clean up the code, try to put the functions and classes into another python file for better documentation
         TASK 2 : Find alternate solutions to using IF statements
         '''
