@@ -4,27 +4,30 @@ import random
 from Classes import Deck,Cards,Player
 import Classes
 
-
 game = True
 
-while game: 
 
-    mydeck = Deck()
-    random.shuffle(mydeck.newdeck)
-    player_one = Player()
+while game: # Initializes the game
+
+    mydeck = Deck() # Creates the deck
+    random.shuffle(mydeck.newdeck) # Shuffles the deck
+    player_one = Player() 
     player_two = Player()
-    stash = []
+    stash = [] 
 
-    for _ in range(2):
+    for _ in range(7):
 
         player_one.player_one.append(mydeck.deal_one())
         player_two.player_two.append(mydeck.deal_one())
+    
+    x,y = random.choice(Deck.colors[1:]),random.choice(Deck.card_type[:11]) # Creates a random top card (no wildcards and action cards)
+    first_card = Classes.Cards(x,y)
 
-    stash.append(mydeck.deal_one())
+    stash.append(first_card) #adds to the stash, becomes the top card
 
-    while True:
+    while True: 
 
-        if len(player_one.player_one) == 0:
+        if len(player_one.player_one) == 0: # Breaks the loop if any of the player's card is == 0
             print('PLAYER ONE HAS WON THE GAME!')
             break
 
@@ -34,54 +37,64 @@ while game:
 
         else:
             
-            op = True
-            draw = True
+            op = True # Bool for determining whether color == color is compatible
 
-            while True:
+            draw = True # Bool for determining whether a player should draw if player
+                        # did not drop a single card 
+
+            while True: 
                 
-                os.system('cls')
+                os.system('cls') # Clears the terminal
 
-                comp_cards_one = Classes.comp_cards(player_one.player_one,stash,op)
-                Classes.display(player_one.player_one,stash,comp_cards_one) # display mycards, and the top card
-                drop_card_index = input('PLAYER 1 : What card to drop? [index] or [draw]:\n ')
+                comp_cards_one = Classes.comp_cards(player_one.player_one,stash,op) # Compatible cards in player's deck
 
-                if drop_card_index == 'end':
+                Classes.display(player_one.player_one,stash,comp_cards_one) # Displays top card, player's cards, compatible cards
+
+                drop_card_index = input('PLAYER 1 : What card to drop? [index] [draw] [stop]:\n ') # User prompt
+
+                if drop_card_index == 'end': # End the program
                     2 + '3'
 
-                if drop_card_index[0].lower() in ['s','d']:
-                    if drop_card_index == 'draw' and not draw:
+                if drop_card_index[0].lower() in ['s','d']: 
+                    if drop_card_index == 'draw' and not draw: # If player chooses to draw, and he has already dropped a card
+                                                               # it continues the loop
                         print('You cannot draw!\n') 
                         continue
-                    else:
+                    else: # If player hasn't dropped a card and chooses to draw, it breaks the loop (player 2's turn)
                         break  
 
-                if not drop_card_index.isdigit(): continue
+                if not drop_card_index.isdigit(): continue # Checks if the input is a digit, else it restarts the prompt
 
-                compatible = Classes.check_one(comp_cards_one,drop_card_index,stash,op)
+                compatible = Classes.check_one(comp_cards_one,drop_card_index,stash,op) # It checks if the card chosen is compatible
 
-                if compatible: # accepts if == to color and type
-                    x = Classes.move_card(mydeck.newdeck,player_one.player_one,player_two.player_two,drop_card_index,stash,comp_cards_one)
+                if compatible: 
 
-                    if x == 1: 
-                        draw = False  
+                    x = Classes.move_card(mydeck.newdeck,player_one.player_one,\
+                    player_two.player_two,drop_card_index,stash,comp_cards_one) # Initalizes the card
+
+                    if x == 1: # If it returns 1, it finishes player one's turn
+                        draw = False # Cannot draw
                         break
-                    elif x == 0:
+
+                    elif x == 0: # (skip,reverse) Continues player's turn
                         continue
                     else:
-                        op = False
-                    draw = False   
+                        op = False # It means a card has been drop, which only allows == card type
+                                   # on the next card drop
 
-                elif not compatible:
+                    draw = False   # Cannot draw since a card has already been dropped
+
+                elif not compatible: # Continues the loop!
                     print('Not Compatible!\n')
 
-            if draw:
+            if draw: # If bool draw is true, draws one card
 
                 player_one.player_one.append(mydeck.newdeck.pop())
                 print('Finished Drawing One Card!\n')
                 Classes.display(player_one.player_one,stash,comp_cards_one)
 
                 """
-                PLAYER TWO TURN HERE
+                PLAYER TWO TURN HERE:
                 """
         if len(player_one.player_one) == 0:
             print('PLAYER ONE HAS WON THE GAME!')
@@ -139,7 +152,7 @@ while game:
 
     again_prompt = 'FILL'
 
-    while again_prompt[0].lower() not in ['y','n']:
+    while again_prompt[0].lower() not in ['y','n']: # Play again prompt
         again_prompt = input('Would you like to play again? [Yes/No]: \n')
 
     if again_prompt[0] == 'y':
@@ -148,14 +161,7 @@ while game:
         game = False
 
            
-    
-            
-        ''' 
-        TASK 1 : Clean up the code, try to put the functions and classes into another python file for better documentation
-        TASK 2 : Find alternate solutions to using IF statements
-        BUG: When dropping All Wild, player still draws a card!
-        '''
-        # we need to break this loop, either by hitting stop or by using a wildcard/draw card
-
 print('GAME OVER! Thank you for playing!')
 # GAME OVER
+
+
